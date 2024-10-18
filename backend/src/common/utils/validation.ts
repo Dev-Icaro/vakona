@@ -15,8 +15,8 @@ export const validation =
 
     Object.entries(schemas).forEach(([key, schema]) => {
       try {
-        const requestProp = key as keyof typeof request;
-        schema.validateSync(request[requestProp], { abortEarly: false });
+        const requestKey = key as keyof typeof request;
+        schema.validateSync(request[requestKey], { abortEarly: false });
       } catch (error) {
         if (error instanceof ValidationError) {
           errors[key] = error.errors;

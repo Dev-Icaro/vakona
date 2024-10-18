@@ -55,7 +55,7 @@ class UserRepositoryImpl implements IUserRepository {
   async createUser(client: PoolClient, user: ICreateUserDTO): Promise<void> {
     await client.query(
       `
-      INSERT INTO USERS (NAME, EMAIL, PASSWORD, PHONE_NUMBER, ACTIVE_IND, CREATION_DATE)
+      INSERT INTO USERS (NAME, EMAIL, PASSWORD, PHONE_NUMBER, ACTIVE_IND, CREATED_AT)
         VALUES ($1, $2, $3, $4, $5, $6)
       `,
       [user.name, user.email, user.password, user.phoneNumber, user.activeInd, new Date()],
@@ -71,7 +71,7 @@ class UserRepositoryImpl implements IUserRepository {
         PASSWORD = $3,
         PHONE_NUMBER = $4,
         ACTIVE_IND = $5,
-        UPDATE_DATE = $6,
+        UPDATED_AT = $6
         WHERE USER_ID = $7
       `,
       [user.name, user.email, user.password, user.phoneNumber, user.activeInd, new Date(), user.userId],

@@ -2,7 +2,12 @@ import { container } from '@common/ioc/inversify.config';
 import { withAccessAuth } from '@modules/user/application/utils/authUtils';
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
-import { createUserValidation } from '../validations/userValidations';
+import {
+  createUserValidation,
+  deleteUserValidation,
+  getUserByIdValidation,
+  updateUserValidation,
+} from '../validations/userValidations';
 
 const userRouter = Router();
 const userController = container.resolve(UserController);
@@ -89,7 +94,7 @@ userRouter.post('/', withAccessAuth, createUserValidation, userController.create
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-userRouter.get('/:id', withAccessAuth, userController.getById.bind(userController));
+userRouter.get('/:id', withAccessAuth, getUserByIdValidation, userController.getById.bind(userController));
 
 /**
  * @openapi
@@ -120,7 +125,7 @@ userRouter.get('/:id', withAccessAuth, userController.getById.bind(userControlle
  *       404:
  *         description: Usuário ou contratante não encontrado.
  */
-userRouter.put('/:id', withAccessAuth, userController.update.bind(userController));
+userRouter.put('/:id', withAccessAuth, updateUserValidation, userController.update.bind(userController));
 
 /**
  * @openapi
@@ -145,6 +150,6 @@ userRouter.put('/:id', withAccessAuth, userController.update.bind(userController
  *       404:
  *         description: Usuário não encontrado.
  */
-userRouter.delete('/:id', withAccessAuth, userController.delete.bind(userController));
+userRouter.delete('/:id', withAccessAuth, deleteUserValidation, userController.delete.bind(userController));
 
 export default userRouter;

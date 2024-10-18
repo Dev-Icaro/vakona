@@ -9,6 +9,6 @@ routes.get('/', (req, res) => {
 });
 
 routes.use('/auth', authRouter);
-routes.use('/users', userRouter);
+routes.use('/user', userRouter);
 
 export default routes;

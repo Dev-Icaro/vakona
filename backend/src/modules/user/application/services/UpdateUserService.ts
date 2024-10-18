@@ -36,7 +36,6 @@ export default class UpdateUserService implements IService<void> {
     }
 
     const userByEmail = await userRepo.getUserByEmail(this.appContext.getClient(), updateUserDTO.email);
-    const userByPhone = await userRepo.getUserByPhoneNumber(this.appContext.getClient(), updateUserDTO.phoneNumber);
 
     if (userByEmail && user.userId !== userByEmail.userId) {
       throw new AppException(
@@ -44,23 +43,15 @@ export default class UpdateUserService implements IService<void> {
       );
     }
 
-    if (userByPhone && user.userId !== userByPhone.userId) {
-      throw new AppException(
-        Helpers.formatErrorMessage(UserErrorMessages.USER_WITH_PHONE_ALREADY_EXISTS, [updateUserDTO.phoneNumber]),
-      );
-    }
     updateUserDTO.password = await bcrypt.hash(updateUserDTO.password, BCRYPT_SALT_ROUNDS);
     await userRepo.updateUser(this.appContext.getClient(), updateUserDTO);
   }
 
   private validateInput(updateUserDTO: IUpdateUserDTO): void {
     InputValidator.validateEmail(updateUserDTO.email);
-    InputValidator.validatePhoneNumber(updateUserDTO.phoneNumber);
 
-    if (updateUserDTO.comission > 100 || updateUserDTO.comission < 0) {
-      throw new AppException(
-        Helpers.formatErrorMessage(UserErrorMessages.INVALID_COMISSION_VALUE, [updateUserDTO.comission]),
-      );
+    if (updateUserDTO.phoneNumber) {
+      InputValidator.validatePhoneNumber(updateUserDTO.phoneNumber);
     }
   }
 }
