@@ -29,40 +29,32 @@ class UserController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    let { contractorId, name, email, password, phoneNumber, comission, observation, activeInd } = request.body;
-    contractorId = InputValidator.checkTypeAndAssign(contractorId, {
-      name: 'Id do contratante',
-      varType: DataTypes.NUMBER,
-    });
-    name = InputValidator.checkTypeAndAssign(name, { name: 'Nome' });
-    email = InputValidator.checkTypeAndAssign(email, { name: 'Email' });
-    password = InputValidator.checkTypeAndAssign(password, { name: 'Senha' });
-    phoneNumber = InputValidator.checkTypeAndAssign(phoneNumber, { name: 'Número de celular' });
-    comission = InputValidator.checkTypeAndAssign(comission, {
-      name: 'Comissão',
-      varType: DataTypes.NUMBER,
-    });
-    observation = InputValidator.checkTypeAndAssign(observation, {
-      name: 'Observação',
-      required: false,
-    });
-    activeInd = InputValidator.checkTypeAndAssign(activeInd, {
-      name: 'Ativo',
-      required: false,
-      varType: DataTypes.BOOLEAN,
-      defaultValue: true,
-    });
+    let {} = request.body;
 
-    await this.userUseCases.createUser({
-      contractorId,
-      name,
-      email,
-      password,
-      phoneNumber,
-      comission,
-      observation,
-      activeInd,
-    });
+    // contractorId = InputValidator.checkTypeAndAssign(contractorId, {
+    //   name: 'Id do contratante',
+    //   varType: DataTypes.NUMBER,
+    // });
+    // name = InputValidator.checkTypeAndAssign(name, { name: 'Nome' });
+    // email = InputValidator.checkTypeAndAssign(email, { name: 'Email' });
+    // password = InputValidator.checkTypeAndAssign(password, { name: 'Senha' });
+    // phoneNumber = InputValidator.checkTypeAndAssign(phoneNumber, { name: 'Número de celular' });
+    // comission = InputValidator.checkTypeAndAssign(comission, {
+    //   name: 'Comissão',
+    //   varType: DataTypes.NUMBER,
+    // });
+    // observation = InputValidator.checkTypeAndAssign(observation, {
+    //   name: 'Observação',
+    //   required: false,
+    // });
+    // activeInd = InputValidator.checkTypeAndAssign(activeInd, {
+    //   name: 'Ativo',
+    //   required: false,
+    //   varType: DataTypes.BOOLEAN,
+    //   defaultValue: true,
+    // });
+
+    await this.userUseCases.createUser({});
 
     return response.status(HttpStatus.NO_CONTENT).send();
   }

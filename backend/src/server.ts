@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import 'reflect-metadata';
 import 'express-async-errors';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -8,6 +9,7 @@ import AppException from '@common/exceptions/AppException';
 import { HttpStatus } from '@common/utils/systemConstants';
 import { v4 as uuidv4 } from 'uuid';
 import httpContext from 'express-http-context';
+import routes from '@common/http/routes';
 
 const app = express();
 
@@ -15,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(httpContext.middleware);
+app.use(routes);
 
 app.use(function (req, res, next) {
   httpContext.set('reqId', uuidv4());
@@ -23,7 +26,7 @@ app.use(function (req, res, next) {
 
 app.use((error: Error, req: Request, res: Response, _: NextFunction) => {
   if (error instanceof AppException) {
-    logger.error(error);
+    logger.error(error.message);
     return res.status(error.statusCode).json({
       status: 'error',
       message: error.message,

@@ -16,4 +16,4 @@ CREATE TABLE app.users(
 );
 
 INSERT INTO app.users("name", cpf, phone_number, email, "password", cep) 
-VALUES ('admin', '12345678901', '123456789', 'admin@admin.com.br',  '$2b$10$Qcdjv2.iq2jhNm3LcafX/eXFAl3ecpgBom5yKdMBedJk0ZdA0LQqy', '00012345');
+VALUES ('admin', '12345678901', '123456789', 'admin@admin.com',  '$2b$10$Qcdjv2.iq2jhNm3LcafX/eXFAl3ecpgBom5yKdMBedJk0ZdA0LQqy', '00012345');
