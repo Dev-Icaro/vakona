@@ -1,27 +1,36 @@
 import { RequestHandler } from 'express';
-import { ValidationError, ObjectSchema } from 'yup';
+import { ObjectSchema, ValidationError } from 'yup';
+import { HttpStatus } from './systemConstants';
 
-type TProperty = 'body' | 'header' | 'params' | 'query';
-
-type TGetSchema = <T>(schema: ObjectSchema<T>) => ObjectSchema<T>;
-
-type TAllSchemas = Record<TProperty, ObjectSchema<any>>;
-
-type TGetAllSchemas = (getSchema: TGetSchema) => Partial<TAllSchemas>;
-
-type TValidation = (schemas: Partial<TAllSchemas>) => RequestHandler;
-
-export const validation: TValidation = getAllSchemas => async (req, res, next) => {
-  const schemas = getAllSchemas(schema => schema);
-
-  const errors: Record<string, Record<string, string>> = {};
-
-  Object.entries(schemas).forEach(([key, schema]) => {
-    try {
-      schema.validateSync(req[key as TProperty], {});
-    } catch (error) {
-      const yupError = error as ValidationError;
-      const errors: Record<string, string> = {};
-    }
-  });
+export type TRequestValidationSchema = {
+  body?: ObjectSchema<any>;
+  params?: ObjectSchema<any>;
+  query?: ObjectSchema<any>;
 };
+
+export const validation =
+  (schemas: TRequestValidationSchema): RequestHandler =>
+  async (request, response, next) => {
+    const errors: Record<string, string[]> = {};
+
+    Object.entries(schemas).forEach(([key, schema]) => {
+      try {
+        const requestProp = key as keyof typeof request;
+        schema.validateSync(request[requestProp], { abortEarly: false });
+      } catch (error) {
+        if (error instanceof ValidationError) {
+          errors[key] = error.errors;
+        }
+      }
+    });
+
+    const hasError = Object.keys(errors).length > 0;
+    if (hasError) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        status: 'error',
+        errors,
+      });
+    }
+
+    next();
+  };

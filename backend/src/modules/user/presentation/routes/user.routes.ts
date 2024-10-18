@@ -2,6 +2,7 @@ import { container } from '@common/ioc/inversify.config';
 import { withAccessAuth } from '@modules/user/application/utils/authUtils';
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
+import { createUserValidation } from '../validations/userValidations';
 
 const userRouter = Router();
 const userController = container.resolve(UserController);
@@ -61,7 +62,7 @@ userRouter.get('/', withAccessAuth, userController.getAll.bind(userController));
  *       409:
  *         description: Já existe um usuário com o email informado.
  */
-userRouter.post('/', withAccessAuth, userController.create.bind(userController));
+userRouter.post('/', withAccessAuth, createUserValidation, userController.create.bind(userController));
 
 /**
  * @openapi
