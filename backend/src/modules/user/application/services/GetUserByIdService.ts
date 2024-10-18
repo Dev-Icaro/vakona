@@ -1,13 +1,12 @@
-import AppException from '@common/exceptions/AppException';
 import IService from '@common/interfaces/IService';
 import AppContext from '@common/utils/AppContext';
 import Helpers from '@common/utils/Helpers';
-import { HttpStatus } from '@common/utils/systemConstants';
 import IUserDTO from '@modules/user/domain/dtos/IUserDTO';
 import IUserRepository from '@modules/user/infra/interfaces/IUserRepository';
 import { UserErrorMessages } from '../../domain/error-messages/UserErrorMessages';
 import RepositoryFactory from '@common/utils/RepositoryFactory';
 import UserMapper from '../utils/UserMapper';
+import { NotFoundException } from '@common/exceptions/HttpExceptions';
 
 /**
  * Service class for retrieving a user by ID.
@@ -28,10 +27,7 @@ export default class GetUserByIdService implements IService<IUserDTO> {
     if (user) {
       return UserMapper.modelToDTO(user);
     } else {
-      throw new AppException(
-        Helpers.formatErrorMessage(UserErrorMessages.USER_NOT_FOUND, [userId]),
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(Helpers.formatErrorMessage(UserErrorMessages.USER_NOT_FOUND, [userId]));
     }
   }
 }

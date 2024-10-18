@@ -5,9 +5,9 @@ export default interface IControlFields {
   /**
    * The date when the entity was created.
    */
-  creationDate: Date;
+  createdAt: Date;
   /**
    * The date when the entity was last updated.
    */
-  updateDate: Date;
+  updatedAt: Date;
 }
