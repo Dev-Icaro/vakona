@@ -1,4 +1,3 @@
-import AppException from '@common/exceptions/AppException';
 import IService from '@common/interfaces/IService';
 import AppContext from '@common/utils/AppContext';
 import InputValidator from '@common/utils/InputValidator';
@@ -9,6 +8,7 @@ import IUserRepository from '@modules/user/infra/interfaces/IUserRepository';
 import { UserErrorMessages } from '../../domain/error-messages/UserErrorMessages';
 import bcrypt from 'bcrypt';
 import RepositoryFactory from '@common/utils/RepositoryFactory';
+import { ConflictException } from '@common/exceptions/HttpExceptions';
 
 /**
  * Service class for creating a new user.
@@ -27,11 +27,16 @@ export default class CreateUserService implements IService<void> {
     this.validateInput(createUserDTO);
     const userRepo: IUserRepository = RepositoryFactory.getUserRepository();
 
-    const existsByEmail = await userRepo.existsByEmail(this.appContext.getClient(), createUserDTO.email);
+    const existsByEmail = await userRepo.existsByEmail(
+      this.appContext.getClient(),
+      createUserDTO.email,
+    );
 
     if (existsByEmail) {
-      throw new AppException(
-        Helpers.formatErrorMessage(UserErrorMessages.USER_WITH_EMAIL_ALREADY_EXISTS, [createUserDTO.email]),
+      throw new ConflictException(
+        Helpers.formatErrorMessage(UserErrorMessages.USER_WITH_EMAIL_ALREADY_EXISTS, [
+          createUserDTO.email,
+        ]),
       );
     } else {
       createUserDTO.password = await bcrypt.hash(createUserDTO.password, BCRYPT_SALT_ROUNDS);

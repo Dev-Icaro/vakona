@@ -53,8 +53,13 @@ class UserRepositoryMock implements IUserRepository {
     return this.users.slice(startIndex, endIndex);
   }
 
-  createUser(client: PoolClient, user: ICreateUserDTO): Promise<void> {
-    throw new Error('Method not implemented.');
+  async createUser(client: PoolClient, user: ICreateUserDTO): Promise<void> {
+    this.users.push({
+      ...user,
+      userId: Math.floor(Math.random() * 1000),
+      createdAt: new Date(0),
+      updatedAt: null,
+    });
   }
 
   updateUser(client: PoolClient, user: IUpdateUserDTO): Promise<void> {
