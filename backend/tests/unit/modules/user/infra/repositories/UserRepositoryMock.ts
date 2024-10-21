@@ -37,16 +37,20 @@ class UserRepositoryMock implements IUserRepository {
     },
   ];
 
-  countUsers(client: PoolClient): Promise<number> {
-    throw new Error('Method not implemented.');
+  async countUsers(client: PoolClient): Promise<number> {
+    return this.users.length;
   }
 
   async getUserById(client: PoolClient, userId: number): Promise<IUser> {
     return this.users.find(user => user.userId === userId) || null;
   }
 
-  getAllUsers(client: PoolClient, paginationParams: IPaginationParams): Promise<IUser[]> {
-    throw new Error('Method not implemented.');
+  async getAllUsers(client: PoolClient, paginationParams: IPaginationParams): Promise<IUser[]> {
+    const page = Math.max(paginationParams.page, 1);
+    const startIndex = (page - 1) * paginationParams.perPage;
+    const endIndex = startIndex + paginationParams.perPage;
+
+    return this.users.slice(startIndex, endIndex);
   }
 
   createUser(client: PoolClient, user: ICreateUserDTO): Promise<void> {

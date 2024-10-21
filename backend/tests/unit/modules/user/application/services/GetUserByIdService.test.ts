@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-import 'dotenv/config';
 import { container } from '@common/ioc/inversify.config';
 import TYPES from '@common/ioc/types';
 import UserRepositoryMock from '../../infra/repositories/UserRepositoryMock';

@@ -1,13 +1,12 @@
-import AppException from '@common/exceptions/AppException';
 import IPaginationParams from '@common/interfaces/IPaginationParams';
 import IService from '@common/interfaces/IService';
 import AppContext from '@common/utils/AppContext';
 import RepositoryFactory from '@common/utils/RepositoryFactory';
-import { HttpStatus } from '@common/utils/systemConstants';
 import IUserPaginateDTO from '@modules/user/domain/dtos/IUserPaginateDTO';
 import IUserRepository from '@modules/user/infra/interfaces/IUserRepository';
 import { UserErrorMessages } from '../../domain/error-messages/UserErrorMessages';
 import UserMapper from '../utils/UserMapper';
+import { NotFoundException } from '@common/exceptions/HttpExceptions';
 
 /**
  * Service class for retrieving all users with pagination.
@@ -36,7 +35,7 @@ export default class GetAllUsersService implements IService<IUserPaginateDTO> {
         }),
       };
     } else {
-      throw new AppException(UserErrorMessages.USERS_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(UserErrorMessages.USERS_NOT_FOUND);
     }
   }
 }
