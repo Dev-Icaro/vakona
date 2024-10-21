@@ -62,8 +62,19 @@ class UserRepositoryMock implements IUserRepository {
     });
   }
 
-  updateUser(client: PoolClient, user: IUpdateUserDTO): Promise<void> {
-    throw new Error('Method not implemented.');
+  async updateUser(client: PoolClient, user: IUpdateUserDTO): Promise<void> {
+    const userIndex = this.users.findIndex(currUser => currUser.userId === user.userId);
+    const userInDatabase = this.users[userIndex];
+
+    if (userIndex < 0) {
+      return;
+    }
+
+    this.users[userIndex] = {
+      ...userInDatabase,
+      updatedAt: new Date(),
+      createdAt: userInDatabase.createdAt,
+    };
   }
 
   deleteUser(client: PoolClient, userId: number): Promise<void> {
@@ -78,8 +89,13 @@ class UserRepositoryMock implements IUserRepository {
     throw new Error('Method not implemented.');
   }
 
-  getUserByEmail(client: PoolClient, email: string): Promise<IUser> {
-    throw new Error('Method not implemented.');
+  async getUserByEmail(client: PoolClient, email: string): Promise<IUser> {
+    const user = this.users.find(user => user.email.toUpperCase() === email.toUpperCase());
+    if (!user) {
+      return null;
+    }
+
+    return user;
   }
 
   getUserByPhoneNumber(client: PoolClient, phoneNumber: string): Promise<IUser> {

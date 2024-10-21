@@ -9,6 +9,7 @@ import IUserRepository from '@modules/user/infra/interfaces/IUserRepository';
 import { UserErrorMessages } from '../../domain/error-messages/UserErrorMessages';
 import bcrypt from 'bcrypt';
 import RepositoryFactory from '@common/utils/RepositoryFactory';
+import { ConflictException } from '@common/exceptions/HttpExceptions';
 
 /**
  * Service class for updating user information.
@@ -35,11 +36,16 @@ export default class UpdateUserService implements IService<void> {
       );
     }
 
-    const userByEmail = await userRepo.getUserByEmail(this.appContext.getClient(), updateUserDTO.email);
+    const userByEmail = await userRepo.getUserByEmail(
+      this.appContext.getClient(),
+      updateUserDTO.email,
+    );
 
     if (userByEmail && user.userId !== userByEmail.userId) {
-      throw new AppException(
-        Helpers.formatErrorMessage(UserErrorMessages.USER_WITH_EMAIL_ALREADY_EXISTS, [updateUserDTO.email]),
+      throw new ConflictException(
+        Helpers.formatErrorMessage(UserErrorMessages.USER_WITH_EMAIL_ALREADY_EXISTS, [
+          updateUserDTO.email,
+        ]),
       );
     }
 

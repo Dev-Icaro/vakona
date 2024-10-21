@@ -30,6 +30,8 @@ test('should return user', async () => {
 });
 
 test('should throw an error', async () => {
-  const expectedReject = new NotFoundException(Helpers.formatErrorMessage(UserErrorMessages.USER_NOT_FOUND, [2]));
+  const expectedReject = new NotFoundException(
+    Helpers.formatErrorMessage(UserErrorMessages.USER_NOT_FOUND, [2]),
+  );
   await expect(getUserByIdService.execute(2)).rejects.toStrictEqual(expectedReject);
 });
