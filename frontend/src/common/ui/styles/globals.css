@@ -10,7 +10,8 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    /* --primary: 0 0% 9%; */
+    --primary: 223 77% 53%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -38,7 +39,6 @@
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    /* --primary: 223 77% 53%; */
     --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -58,11 +58,28 @@
     --chart-5: 340 75% 55%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  body,
+  html {
+    @apply h-full overflow-x-hidden;
+  }
+}
+
+@layer utilities {
+  .responsive-text {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+
+  .responsive-title {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
   }
 }

@@ -1,7 +1,7 @@
 const Logo = () => {
   return (
     <span>
-      <p className="text-blue-700 text-4xl font-bold">vakona</p>
+      <p className="text-primary text-4xl font-bold">vakona</p>
     </span>
   );
 };
