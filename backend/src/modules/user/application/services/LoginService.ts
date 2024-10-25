@@ -7,7 +7,11 @@ import { UserErrorMessages } from '../../domain/error-messages/UserErrorMessages
 import IAuthDTO from '@modules/user/domain/dtos/IAuthDTO';
 import bcrypt from 'bcrypt';
 import ITokenInfo from '@modules/user/domain/models/ITokenInfo';
-import { createAccessToken, createHashForRefreshToken, createRefreshToken } from '../utils/authUtils';
+import {
+  createAccessToken,
+  createHashForRefreshToken,
+  createRefreshToken,
+} from '../utils/authUtils';
 import { AuthErrorMessages } from '@modules/user/domain/error-messages/AuthErrorMessages';
 import redisCache from '@common/cache/RedisCache';
 import RepositoryFactory from '@common/utils/RepositoryFactory';
@@ -43,9 +47,13 @@ export default class LoginService implements IService<ITokenInfo> {
 
       await redisCache.getClient().set(refreshTokenHash, user.email, 'EX', 8 * 60 * 60);
 
-      return { accessToken, refreshToken, user: { userId: user.userId, email: user.email, name: user.name } };
+      return {
+        accessToken,
+        refreshToken,
+        user: { userId: user.userId, email: user.email, name: user.name },
+      };
     } else {
-      throw new AppException(UserErrorMessages.USERS_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new AppException(AuthErrorMessages.INVALID_CREDENTIALS, HttpStatus.UNAUTHORIZED);
     }
   }
 }

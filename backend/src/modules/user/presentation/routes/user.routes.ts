@@ -67,7 +67,12 @@ userRouter.get('/', withAccessAuth, userController.getAll.bind(userController));
  *       409:
  *         description: Já existe um usuário com o email informado.
  */
-userRouter.post('/', withAccessAuth, createUserValidation, userController.create.bind(userController));
+userRouter.post(
+  '/',
+  withAccessAuth,
+  createUserValidation,
+  userController.create.bind(userController),
+);
 
 /**
  * @openapi
@@ -94,7 +99,12 @@ userRouter.post('/', withAccessAuth, createUserValidation, userController.create
  *       404:
  *         $ref: '#/components/responses/NotFound'
  */
-userRouter.get('/:id', withAccessAuth, getUserByIdValidation, userController.getById.bind(userController));
+userRouter.get(
+  '/:id',
+  withAccessAuth,
+  getUserByIdValidation,
+  userController.getById.bind(userController),
+);
 
 /**
  * @openapi
@@ -125,7 +135,12 @@ userRouter.get('/:id', withAccessAuth, getUserByIdValidation, userController.get
  *       404:
  *         description: Usuário ou contratante não encontrado.
  */
-userRouter.put('/:id', withAccessAuth, updateUserValidation, userController.update.bind(userController));
+userRouter.put(
+  '/:id',
+  withAccessAuth,
+  updateUserValidation,
+  userController.update.bind(userController),
+);
 
 /**
  * @openapi
@@ -150,6 +165,11 @@ userRouter.put('/:id', withAccessAuth, updateUserValidation, userController.upda
  *       404:
  *         description: Usuário não encontrado.
  */
-userRouter.delete('/:id', withAccessAuth, deleteUserValidation, userController.delete.bind(userController));
+userRouter.delete(
+  '/:id',
+  withAccessAuth,
+  deleteUserValidation,
+  userController.delete.bind(userController),
+);
 
 export default userRouter;
