@@ -1,6 +1,6 @@
 import { AxiosHttpClient } from '@/infra/http/HttpClient';
 import AuthServiceImpl from '@/infra/services/services-impl/AuthServiceImpl';
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -23,11 +23,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             password: password,
           })
           .catch(error => {
-            throw new Error(error.message);
+            throw new CredentialsSignin(error.message);
           });
 
         if (tokenInfo) {
-          return tokenInfo.user;
+          return {
+            ...tokenInfo.user,
+            accessToken: tokenInfo.accessToken,
+          };
         }
 
         return null;
