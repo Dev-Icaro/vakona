@@ -24,7 +24,7 @@ const config: Config = {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -97,10 +97,13 @@ const config: Config = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    '@/auth': '<rootDir>/__tests__/mocks/auth.ts',
+    'next-auth/providers/credentials': '<rootDir>/__tests__/mocks/next-auth-providers-credentials.ts',
+    'next-auth': '<rootDir>/__tests__/mocks/next-auth.ts',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  modulePathIgnorePatterns: ['<rootDir>/__tests__/mocks'],
 
   // Activates notifications for test results
   // notify: false,
