@@ -2,76 +2,79 @@
 
 import { Button } from '@/common/ui/components/button';
 import { Input } from '@/common/ui/components/input';
-import { Label } from '@/common/ui/components/label';
-import { FieldErrors, useForm, UseFormRegister } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import z from 'zod';
 import { useState, useTransition } from 'react';
 import { loginAction } from '@/app/_actions/authActions';
+import { loginSchema } from '@/app/_schemas/authSchemas';
+import { z } from 'zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/common/ui/components/form';
 
 const LoginForm = () => {
-  const { errors, authError, onSubmit, register, isPending } = useLoginForm();
+  const { handleSubmit, authError, isPending, form } = useLoginForm();
 
   return (
-    <form onSubmit={onSubmit}>
-      <header>
-        <h1 className="text-3xl text-center mb-2">Bem-vindo!</h1>
-        <p className="text-center text-[#333333]">Você pode entrar com seu email ou CPF</p>
-      </header>
+    <Form {...form}>
+      <form onSubmit={handleSubmit}>
+        <header>
+          <h1 className="text-3xl text-center mb-2">Bem-vindo!</h1>
+          <p className="text-center text-[#333333]">Você pode entrar com seu email ou CPF</p>
+        </header>
 
-      <div className="flex flex-col space-y-4 my-8">
-        {authError && <div className="text-red-600">{authError}</div>}
+        <div className="flex flex-col space-y-4 my-8">
+          {authError && <div className="text-red-600">{authError}</div>}
 
-        <div>
-          <Label htmlFor="login">E-mail ou CPF</Label>
-          <Input {...register('email')} id="login" disabled={isPending} placeholder="Insira seu email ou CPF" />
-          {errors?.email?.message && <div className="text-red-600">{errors?.email?.message}</div>}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>E-mail ou CPF</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="exemplo@gmail.com" type="email" isError={!!fieldState.error} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>Senha</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="Insira sua senha" type="password" isError={!!fieldState.error} />
+                </FormControl>
+                <FormMessage />
+                <Button size="sm" variant="link" className="float-end">
+                  Esqueci minha senha
+                </Button>
+              </FormItem>
+            )}
+          />
         </div>
 
-        <div>
-          <Label htmlFor="password">Senha</Label>
-          <Input
-            {...register('password')}
-            id="password"
-            disabled={isPending}
-            placeholder="Insira sua senha"
-            type="password"
-          />
-          {errors?.password?.message && <div className="text-red-600">{errors?.password?.message}</div>}
-
-          <Button size="sm" variant="link" className="float-end">
-            Esqueci minha senha
+        <div className="text-center flex flex-col space-y-2">
+          <Button className="w-full" size="lg" type="submit" disabled={isPending}>
+            Entrar
+          </Button>
+          <span>OU</span>
+          <Button className="w-full" size="lg" disabled={isPending}>
+            Google
           </Button>
         </div>
-      </div>
-
-      <div className="text-center flex flex-col space-y-2">
-        <Button className="w-full" size="lg" type="submit" disabled={isPending}>
-          Entrar
-        </Button>
-        <span>OU</span>
-        <Button className="w-full" size="lg" disabled={isPending}>
-          Google
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 };
 
-const loginFormSchema = z.object({
-  email: z.string().min(1, 'Esse campo é obrigatório').email('Email inválido'),
-  password: z.string().min(1, 'Esse campo é obrigatório'),
-});
-
-type TLoginFormValues = {
-  email: string;
-  password: string;
-};
+type TLoginFormValues = z.infer<typeof loginSchema>;
 
 type TUseLoginFormReturn = {
-  onSubmit: () => void;
-  register: UseFormRegister<TLoginFormValues>;
-  errors: FieldErrors<TLoginFormValues>;
+  handleSubmit: () => void;
+  form: UseFormReturn<TLoginFormValues>;
   authError: string;
   isPending: boolean;
 };
@@ -80,19 +83,15 @@ export const useLoginForm = (): TUseLoginFormReturn => {
   const [authError, setAuthError] = useState('');
   const [isPending, startTransition] = useTransition();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TLoginFormValues>({
-    resolver: zodResolver(loginFormSchema),
+  const form = useForm<TLoginFormValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = handleSubmit(async data => {
+  const handleSubmit = form.handleSubmit(async data => {
     startTransition(() => {
       loginAction(data).then(data => {
         if (data?.error) setAuthError(data?.error);
@@ -101,9 +100,8 @@ export const useLoginForm = (): TUseLoginFormReturn => {
   });
 
   return {
-    register,
-    onSubmit,
-    errors,
+    form,
+    handleSubmit,
     authError,
     isPending,
   };
