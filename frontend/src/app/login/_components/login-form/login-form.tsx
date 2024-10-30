@@ -21,7 +21,7 @@ const LoginForm = () => {
           <p className="text-center text-[#333333]">Você pode entrar com seu email ou CPF</p>
         </header>
 
-        <div className="flex flex-col space-y-4 my-5">
+        <div className="flex flex-col space-y-4 my-6">
           {authError && <div className="text-red-600">{authError}</div>}
 
           <FormField
@@ -60,7 +60,7 @@ const LoginForm = () => {
           <Button className="w-full" size="lg" type="submit" disabled={isPending}>
             Entrar
           </Button>
-          <span className="text-sm">OU</span>
+          <span>OU</span>
           <Button className="w-full" size="lg" disabled={isPending}>
             Google
           </Button>

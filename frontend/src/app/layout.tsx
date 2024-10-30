@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${roboto.className}`}>
         <Navigation />
-        <main className="pt-5 h-full">{children}</main>
+        <main className="h-full">{children}</main>
       </body>
     </html>
   );
